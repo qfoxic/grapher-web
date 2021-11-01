@@ -1,0 +1,83 @@
+<form [formGroup]="configForm">
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="Common">
+      <p>
+        <mat-form-field appearance="standard">
+          <mat-label>Diagram Name</mat-label>
+          <input matInput type="text" formControlName="name">
+          <mat-hint>Diagram name that will be displayed in a select</mat-hint>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="standard">
+          <mat-label>Stream url</mat-label>
+          <input matInput type="url" formControlName="url">
+          <mat-hint>Websocket URL address</mat-hint>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="standard">
+          <mat-label>Driver</mat-label>
+          <input matInput type="text" formControlName="driver">
+          <mat-hint>Name of a driver that your service support</mat-hint>
+        </mat-form-field>
+      </p>
+    </mat-tab>
+    <mat-tab label="Layouts">
+      <button mat-button (click)="addLayout()">Add Layout</button>
+      <mat-dialog-content formArrayName="layouts">
+        <div *ngFor="let layout of layouts.controls; let i=index" [formGroupName]="i">
+            <mat-form-field appearance="standard">
+              <mat-label>Layout type</mat-label>
+              <mat-select name="ltype" formControlName="ltype">
+                <mat-option [disabled]="!isLayoutAvailable(lt)" *ngFor="let lt of layoutTypes" [value]="lt">{{ lt }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Layout tip</mat-label>
+              <input matInput type="tip" formControlName="tip">
+            </mat-form-field>
+            <button mat-button (click)="removeLayout(i)">delete</button>
+        </div>
+      </mat-dialog-content>
+    </mat-tab>
+    <mat-tab label="Shapes">
+      <button mat-button (click)="addShape()">Add Shape</button>
+      <mat-dialog-content formArrayName="shapes">
+        <div *ngFor="let shape of shapes.controls; let i=index" [formGroupName]="i">
+          <p>
+            <mat-form-field appearance="standard">
+              <mat-label>Shape name</mat-label>
+              <input matInput type="name" formControlName="name">
+              <mat-hint>The name of a shape should equal to the category of a node</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Fill</mat-label>
+              <input matInput type="fill" formControlName="fill">
+              <mat-hint>Background color of a figure. Examples: black, red etc.</mat-hint>
+            </mat-form-field>
+          </p>
+          <p>
+            <mat-form-field appearance="standard">
+              <mat-label>Figure</mat-label>
+              <input matInput type="figure" formControlName="figure">
+              <mat-hint>You can specify figure of a shape in a text. Examples: Diamond, Ellipse etc.</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Geometry String</mat-label>
+              <input matInput type="geometryString" formControlName="geometryString">
+              <mat-hint>Instead of figure you can specify custom geometry string: SVG path string syntax.</mat-hint>
+            </mat-form-field>
+            <button mat-button (click)="removeShape(i)">delete</button>
+          </p>
+          <br>
+        </div>
+      </mat-dialog-content>
+    </mat-tab>
+  </mat-tab-group>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="onSave()" [disabled]="!configForm.valid" cdkFocusInitial>Save</button>
+  </div>
+</form>
+

@@ -1,0 +1,2 @@
+recursive-include grapher/web *
+recursive-include grapher/web/ui *

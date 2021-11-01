@@ -1,0 +1,67 @@
+<div class="grapher-container">
+  <mat-progress-bar [mode]="progressMode"></mat-progress-bar>
+  <app-diagram></app-diagram>
+  <div class="top-button-panel">
+    <button mat-icon-button color="primary" matTooltip="Create diagram">
+      <mat-icon (click)="createDiagram()">create_new_folder</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Configure current diagram">
+      <mat-icon (click)="updateDiagram()">edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Delete current diagram">
+      <mat-icon (click)="deleteDiagram()">clear</mat-icon>
+    </button>
+
+    <mat-form-field matTooltip="Please select the diagram">
+      <mat-select placeholder="Select Diagram" [(value)]="diagramService.currentDiagramId">
+        <mat-option *ngFor="let diagram of diagramService.diagrams; let i = index;"
+                    [value]="i">
+          {{ diagram.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="input-item" matTooltip="Please enter driver query">
+      <input #inputCommand matInput>
+      <mat-icon (click)="execCmd(inputCommand.value)" matSuffix>play_arrow</mat-icon>
+    </mat-form-field>
+  </div>
+  <ng-template [ngIf]="diagramService.currentDiagram">
+    <mat-button-toggle-group class="system-buttons" [vertical]="true">
+      <mat-button-toggle-group [vertical]="true">
+        <label class="group-label">system</label>
+        <mat-button-toggle matTooltip="Reset current diagram"
+                           (click)="diagramService.clearDiagram()">
+          <mat-icon>blur_off</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Restructure items with initial grid layout"
+                           (click)="diagramService.makeInitialLayout()">
+          <mat-icon>grain</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-button-toggle-group [vertical]="true">
+        <label class="group-label">filter</label>
+        <mat-button-toggle matTooltip="Display nodes with no links"
+                           (click)="diagramService.displayNoLinks()">
+          <mat-icon>scatter_plot</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Display nodes with many links"
+                           (click)="diagramService.displayManyLinks()">
+          <mat-icon>linear_scale</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Clear filtering"
+                           (click)="diagramService.filterClear()">
+          <mat-icon>close</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-button-toggle-group [vertical]="true" value="{{ diagramService.currentDiagram.defaultLayout }}">
+        <label class="group-label" *ngIf="diagramService.currentDiagram.layouts.length > 0">layout</label>
+        <mat-button-toggle *ngFor="let layout of diagramService.currentDiagram.layouts;"
+                           matTooltip="{{ layout.tip }}"
+                           value="{{ layout.ltype }}"
+                           (click)="diagramService.changeDiagramLayout(layout.ltype)">
+          <mat-icon>{{ diagramService.currentDiagram.layoutIcon(layout.ltype) }}</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-button-toggle-group>
+  </ng-template>
+</div>
